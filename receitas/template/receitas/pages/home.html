@@ -1,15 +1,21 @@
 {% include 'receitas/partials/head.html' %}
 
 <body>
-    <header class="main-header-container">
-        <div class="main-header container">
-            <h1>
-                <a href="/">
-                    <i class="fas fa-book"></i>
-                     <span>Receitas {{nome}}</span>
-                </a>
-            </h1>
-    </div>
-    </header>   
+    {%include 'receitas/partials/header.html'%}
+    {%include 'receitas/partials/search.html'%}
+
+    <main class='main-content-container'>
+        <div class='main-content main-content-list container'>
+            {%include 'receitas/partials/receitas.html'%}
+            {%include 'receitas/partials/receitas.html'%}
+            {%include 'receitas/partials/receitas.html'%}
+            {%include 'receitas/partials/receitas.html'%}
+
+        </div>
+    </main>
+
+    {%include 'receitas/partials/footer.html'%}
+
 </body>
+
 </html>
