@@ -6,10 +6,10 @@
 
     <main class='main-content-container'>
         <div class='main-content main-content-list container'>
+            {% for receita in receitas %}
             {%include 'receitas/partials/receitas.html'%}
-            {%include 'receitas/partials/receitas.html'%}
-            {%include 'receitas/partials/receitas.html'%}
-            {%include 'receitas/partials/receitas.html'%}
+            {% endfor %}
+           
 
         </div>
     </main>
