@@ -118,8 +118,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+
+#está é a config dos arquivos staticos de css
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
+
+#esta é a config da pasta em que irá ficar as img dos usuarios
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

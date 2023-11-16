@@ -1,6 +1,14 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class receita(models.model):
+class category(models.Model):
+    name = models.CharField(max_length=65)
+#esta funçao é para mostrar o nome da categoria ou receita que colocar
+    def __str__(self):
+        return self.name
+        
+
+class receita(models.Model):
     title = models.CharField(max_length=65)
     description = models.CharField(max_length=165)
     slug = models.SlugField()
@@ -14,4 +22,9 @@ class receita(models.model):
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=False)
     cover = models.ImageField(upload_to='receitas/cover/%Y/%m/%d/')
-    
+    category = models.ForeignKey(category, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+#esta funçao é para mostrar o nome da categoria ou receita que colocar
+    def __str__(self):
+        return self.title
