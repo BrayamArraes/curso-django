@@ -21,8 +21,8 @@ class receita(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=False)
-    cover = models.ImageField(upload_to='receitas/cover/%Y/%m/%d/')
-    category = models.ForeignKey(category, on_delete=models.SET_NULL, null=True)
+    cover = models.ImageField(upload_to='receitas/cover/%Y/%m/%d/', blank=True, default='')
+    category = models.ForeignKey(category, on_delete=models.SET_NULL, null=True, blank=True, default=None)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
 #esta funçao é para mostrar o nome da categoria ou receita que colocar
