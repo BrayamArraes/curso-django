@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class category(models.Model):
     name = models.CharField(max_length=65)
-#esta funçao é para mostrar o nome da categoria ou receita que colocar
+# esta funçao é para mostrar o nome da categoria ou receita que colocar
     def __str__(self):
         return self.name
         
@@ -25,6 +25,6 @@ class receita(models.Model):
     category = models.ForeignKey(category, on_delete=models.SET_NULL, null=True, blank=True, default=None)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-#esta funçao é para mostrar o nome da categoria ou receita que colocar
+# esta funçao é para mostrar o nome da categoria ou receita que colocar
     def __str__(self):
         return self.title
