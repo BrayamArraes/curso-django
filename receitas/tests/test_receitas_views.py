@@ -18,3 +18,8 @@ class ReceitaViewsTest(TestCase):
             reverse('receitas:receitas', kwargs={'id': 1})
         )
         self.assertIs(view.func, views.receitas)
+
+
+    def test_receita_home_status(self):
+        resposta = self.client.get(reverse('receitas:home'))
+        self.assertEqual(resposta.status_code, 200)
