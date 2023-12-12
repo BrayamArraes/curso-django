@@ -32,3 +32,6 @@ def receitas(request, id):
     })
 
 
+def search(request):
+    return render(request, 'receitas/pages/search.html')
+
