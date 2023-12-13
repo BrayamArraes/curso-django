@@ -1,0 +1,27 @@
+<head>
+    <meta charset="UTF-8">
+        <title>{{ page_title }}</title>
+    {% include 'receitas/partials/head.html' %}
+</head>
+
+<body>
+    {%include 'receitas/partials/header.html'%}
+    {%include 'receitas/partials/search.html'%}
+
+    <main class='main-content-container'>
+        <div class='main-content main-content-list container'>
+            {% for receita in receitas %}
+            {%include 'receitas/partials/receitas.html'%}
+            {% empty %}
+            <div class="msg">
+                <h1>Não há cadastro de receitas aqui !</h1>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    {%include 'receitas/partials/footer.html'%}
+
+</body>
+
+</html>

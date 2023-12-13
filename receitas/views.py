@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_list_or_404
 from utils.receitas.factory import make_receitas
 from receitas.models import receita
-
+from django.http.response import Http404
 
 
 def home(request):
@@ -33,5 +33,15 @@ def receitas(request, id):
 
 
 def search(request):
-    return render(request, 'receitas/pages/search.html')
+    search_term = request.GET.get('search', '').strip()
+
+    if not search_term:
+        raise Http404()
+     
+     
+    return render(request, 'receitas/pages/search.html', {
+        'page_title': f'Pesquisa por "{search_term}"',
+        'search_term': search_term,
+        })
+      
 
