@@ -1,18 +1,92 @@
+<style>
+    :root {
+        --color-primary: #269fe6;
+        --color-primary-hover: #2086c2;
+        --color-primary-dark: #13141f;
+        --color-primary-dark-hover: #212336;
+        --color-primary-light: #d4ecfa;
+        --color-primary-light-hover: #bdd8e7;
+
+        --color-white: #fff;
+        --color-black: #000;
+
+        --color-dark-text: #444;
+        --color-info-light: #cce5ff;
+        --color-debug-light: #cce5ff;
+        --color-success-light: #d4edda;
+        --color-alert-light: #fff3cd;
+        --color-warning-light: #fff3cd;
+        --color-error-light: #f8d7da;
+
+        --color-info-dark: #4d86c4;
+        --color-debug-dark: #4d86c4;
+        --color-success-dark: #4a9c5d;
+        --color-alert-dark: #927f40;
+        --color-warning-dark: #927f40;
+        --color-error-dark: #da525d;
+
+        --color-gray-0: #f9f9f9;
+        --color-gray-1: #e0e0e0;
+        --color-gray-2: #c7c7c7;
+        --color-gray-3: #aeaeae;
+        --color-gray-4: #959595;
+        --color-gray-5: #7d7d7d;
+        --color-gray-6: #646464;
+        --color-gray-7: #4b4b4b;
+        --color-gray-8: #323232;
+        --color-gray-9: #191919;
+
+        --font-primary: sans-serif;
+        --font-headings: 'Roboto Slab', serif;
+
+        --spacing-gutter-medium: 3rem;
+        --spacing-gutter-large: 4rem;
+    }
+
+    .pagination-content {
+        display: flex;
+        flex-flow: row wrap;
+        gap: 1rem 0.5rem;
+    }
+
+    .pagination .page-item {
+        text-decoration: none;
+        background: var(--color-gray-3);
+        padding: 0.5rem 1rem;
+    }
+
+    .pagination .page-link {
+        text-decoration: none;
+        background: var(--color-primary);
+        color: var(--color-white);
+    }
+
+    .pagination .page-current {
+        background: var(--color-primary-dark);
+    }
+</style>
+
+
 {% if receitas.has_other_pages %}
 <div class="container pagination">
     <div class="pagination-content">
         {% if pagination_range.first_page_out_of_range %}
-            <a class="page-link page-item" href="?page=1">1</a>
-            <span class="page-item">...</span>
+        <a class="page-link page-item" href="?page=1">1</a>
+        <span class="page-item">...</span>
         {% endif %}
 
         {% for page in pagination_range.pagination %}
-            <a class="page-link page-item" href="?page={{ page }}">{{ page }}</a>
+        {% if pagination_range.current_page == page %}
+        <a class="page-link page-item page-current" href="?page={{ page }}">{{ page }}</a>
+        {% else %}
+        <a class="page-link page-item" href="?page={{ page }}">{{ page }}</a>
+        {% endif %}
         {% endfor %}
 
         {% if pagination_range.last_page_out_of_range %}
-            <span class="page-item">...</span>
-            <a class="page-link page-item" href="?page={{pagination_range.total_pages}}">{{pagination_range.total_pages}}</a>
+        <span class="page-item">...</span>
+        <a class="page-link page-item"
+            href="?page={{pagination_range.total_pages}}">{{pagination_range.total_pages}}</a>
         {% endif %}
     </div>
 </div>
