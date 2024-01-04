@@ -1,10 +1,10 @@
 <div class="receitas receitas-list-item">
-    {% if  receita.cover %}
-        <div class="receitas-cover">
-            <a href="{%url 'receitas:receitas' receita.id %}">
-                <img src="{{receita.cover.url}}" alt="temporario">
-            </a>    
-        </div>
+    {% if receita.cover %}
+    <div class="receitas-cover">
+        <a href="{%url 'receitas:receitas' receita.id %}">
+            <img src="{{receita.cover.url}}" alt="temporario">
+        </a>
+    </div>
     {% endif %}
     <div class="receitas-title-container">
         <h2 class="receitas-title">
@@ -15,30 +15,28 @@
     </div>
 
     <div class="receitas-autor">
-        <span class="receitas-autor-item">
-            <i class="fas fa-user"></i>
-            {% if receita.author is not none %}
-                {% if receita.author.first_name %}
-                    {{receita.author.first_name}} {{receita.author.last_name}}
-                {% else %}
-                    {{ receita.author.username }}
-                {% endif %}
+        {% if receita.author is not none %}
+            {% if receita.author.first_name %}
+                {{receita.author.first_name}} {{receita.author.last_name}}
             {% else %}
-                desconhecido
+                {{ receita.author.username }}
             {% endif %}
+        {% else %}
+            desconhecido
+        {% endif %}
         </span>
 
-        
+
         <span class="receitas-autor-item">
             <i class="fas fa-calendar-alt"></i>
             {{ receita.created_at|date:"d/m/Y" }} às {{ receita.created_at|date:"H:i" }}
         </span>
 
-        {% if receita.categoria is not none %}
-            <span class="receitas-autor-item">
-                <a href="{% url "receitas:categoria" receita.category.id %}">
+        {% if receita.category is not None %}
+            <span class="receita-author-item">
+                <a href="{% url 'receitas:categoria' receita.category.id %}">
                     <i class="fas fa-layer-group"></i>
-                    <span>{{receita.category.name}}</span>
+                    <span>{{ receita.category.name }}</span>
                 </a>
             </span>
         {% endif %}
@@ -65,7 +63,8 @@
 
     {% if is_detalhe_page is not True %}
     <footer class="receitas-footer">
-        <a class="receitas-read-more button button-dark button-full-width" href="{% url 'receitas:receitas' receita.id %}">
+        <a class="receitas-read-more button button-dark button-full-width"
+            href="{% url 'receitas:receitas' receita.id %}">
             <i class="fas fa-eye"></i>
             <span>ver mais...</span>
         </a>
@@ -73,8 +72,8 @@
     {% endif %}
 
     {% if is_detalhe_page is True %}
-        <div class="preparation-steps">
-            {{ receita.preparation_steps|linebreaksbr }}
-        </div>
+    <div class="preparation-steps">
+        {{ receita.preparation_steps|linebreaksbr }}
+    </div>
     {% endif %}
 </div>
