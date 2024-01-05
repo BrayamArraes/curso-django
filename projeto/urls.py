@@ -24,6 +24,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('receitas.urls')),
+    path('authors/', include('authors.urls')),
     ]
 
 #esta é as configs de urls para imgs de usuarios e arquivos staticos
