@@ -3,6 +3,13 @@ from django.contrib.auth.models import User
 
 
 class RegistroForm(forms.ModelForm):
+    senha = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Repita sua Senha'
+        })
+        )
+
     class Meta:
         model = User
         fields = [
@@ -37,5 +44,11 @@ class RegistroForm(forms.ModelForm):
             }),
             'password': forms.PasswordInput(attrs={
                  'placeholder': 'Digite sua Senha',
-            })
+            }),
+            'email': forms.TextInput(attrs={
+                'placeholder': 'Digite seu E-mail',
+            }),
+            'username': forms.TextInput(attrs={
+                'placeholder': 'Digite nome do Usuário',
+            }),
         }
