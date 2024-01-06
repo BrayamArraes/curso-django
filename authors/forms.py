@@ -12,3 +12,30 @@ class RegistroForm(forms.ModelForm):
             'email',
             'password',
         ]
+    # label é o nome do campo que aparece para o usuario
+        labels = {
+            'first_name': 'Nome',
+            'last_name': 'Sobrenome',
+    }
+        # help_texts é a mensagem que fica embaixo do campo
+        help_texts = {
+            'username': 'Obrigatório. 30 caracteres ou menos. Letras, números e @/./+/-/_ apenas',
+        }
+        # é os erros dos campos e ele é por codigo exemplo: required, invalide
+        error_messages = {
+            'username': {
+                'required': 'Este campo é obrigatório.',
+            }
+        }
+        # widgets nada mais é de uma breve descrição do campo.. neste campo pode colocar placeholder, class de css .. para editar melhor
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'placeholder': 'Digite seu Nome',
+            }),
+            'last_name': forms.TextInput(attrs={
+                'placeholder': 'Digite seu Sobrenome',
+            }),
+            'password': forms.PasswordInput(attrs={
+                 'placeholder': 'Digite sua Senha',
+            })
+        }
