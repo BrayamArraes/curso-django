@@ -1,14 +1,37 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+import re
+
+
+def strong_password(password):
+    # está linha é p/ o usuario criar a password com caracteres/numeros tendo que importar o re (expreçao regular): import re
+    regex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
+
+    if not regex.match(password):
+        raise ValidationError((
+            'a password deve ter pelo menos uma letra maiúscula, '
+            'uma letra minúscula e um número. O comprimento deve ser '
+            'pelo menos 8 caracteres.'
+        ),
+            code='invalid'
+        )
 
 
 class RegistroForm(forms.ModelForm):
-    senha = forms.CharField(
+    password = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Repita sua Senha'
-        })
-        )
+            'placeholder': 'Digite sua senha'
+        }),
+        validators=[strong_password]
+    )
+    password2 = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Repita sua senha'
+        }),
+    )
 
     class Meta:
         model = User
@@ -38,12 +61,13 @@ class RegistroForm(forms.ModelForm):
         widgets = {
             'first_name': forms.TextInput(attrs={
                 'placeholder': 'Digite seu Nome',
+                'class': 'input text-input'
             }),
             'last_name': forms.TextInput(attrs={
                 'placeholder': 'Digite seu Sobrenome',
             }),
             'password': forms.PasswordInput(attrs={
-                 'placeholder': 'Digite sua Senha',
+                'placeholder': 'Digite sua senha',
             }),
             'email': forms.TextInput(attrs={
                 'placeholder': 'Digite seu E-mail',
@@ -52,3 +76,48 @@ class RegistroForm(forms.ModelForm):
                 'placeholder': 'Digite nome do Usuário',
             }),
         }
+
+    # este metodo é para validar um campo de formulario, o def clean é onde o formulario vai.
+    def clean_password(self):
+        data = self.cleaned_data.get('password')
+
+        if 'atenção' in data:
+            raise ValidationError(
+                'Não digite %(pipoca)s no campo senha',
+                code='invalid',
+                params={'pipoca': '"atenção"'}
+            )
+
+        return data
+
+    # este metodo é para validar apartir do clean_field que seria os name dos campos por exemplo first name
+    def clean_first_name(self):
+        data = self.cleaned_data.get('first_name')
+
+        if 'John Doe' in data:
+            raise ValidationError(
+                'Não digite %(value)s no campo first name',
+                code='invalid',
+                params={'value': '"John Doe"'}
+            )
+
+        return data
+
+    # está validação é feita quando um campo depende de outro para validar por exemplo password e a confirmaçao da password 
+    def clean(self):
+        cleaned_data = super().clean()
+
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+
+        if password != password2:
+            password_confirmation_error = ValidationError(
+                'password e password 2 devem ser iguais',
+                code='invalid'
+            )
+            raise ValidationError({
+                'password': password_confirmation_error,
+                'password2': [
+                    password_confirmation_error,
+                ],
+            })
