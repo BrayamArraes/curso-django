@@ -17,6 +17,9 @@ def strong_password(password):
             code='invalid'
         )
 
+# Dentro desta class vc pode colocar tudo de uma vez sem precisar usar os fields um por um entao dentro da variavel
+# você pode colocar os placeholder, label, help-text, widget.... como exemplo abaixo .
+
 
 class RegistroForm(forms.ModelForm):
     password = forms.CharField(
@@ -24,13 +27,15 @@ class RegistroForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Digite sua senha'
         }),
-        validators=[strong_password]
+        validators=[strong_password],
+        label='Senha',
     )
     password2 = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Repita sua senha'
         }),
+        label='Confirme sua senha'
     )
 
     class Meta:
@@ -40,13 +45,12 @@ class RegistroForm(forms.ModelForm):
             'last_name',
             'username',
             'email',
-            'password',
         ]
     # label é o nome do campo que aparece para o usuario
         labels = {
             'first_name': 'Nome',
             'last_name': 'Sobrenome',
-    }
+            }
         # help_texts é a mensagem que fica embaixo do campo
         help_texts = {
             'username': 'Obrigatório. 30 caracteres ou menos. Letras, números e @/./+/-/_ apenas',
@@ -66,9 +70,6 @@ class RegistroForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={
                 'placeholder': 'Digite seu Sobrenome',
             }),
-            'password': forms.PasswordInput(attrs={
-                'placeholder': 'Digite sua senha',
-            }),
             'email': forms.TextInput(attrs={
                 'placeholder': 'Digite seu E-mail',
             }),
@@ -77,15 +78,27 @@ class RegistroForm(forms.ModelForm):
             }),
         }
 
+    # esta def clean garante que o e-mail seja unico
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+        exists = User.objects.filter(email=email).exists()
+
+        if exists:
+            raise ValidationError(
+                'Este e-mail já está em uso', code='invalid',
+            )
+
+        return email
+
     # este metodo é para validar um campo de formulario, o def clean é onde o formulario vai.
     def clean_password(self):
         data = self.cleaned_data.get('password')
 
         if 'atenção' in data:
             raise ValidationError(
-                'Não digite %(pipoca)s no campo senha',
+                'Não digite %(value)s no campo senha',
                 code='invalid',
-                params={'pipoca': '"atenção"'}
+                params={'value': '"atenção"'}
             )
 
         return data
