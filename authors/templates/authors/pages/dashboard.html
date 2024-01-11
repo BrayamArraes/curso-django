@@ -1,0 +1,127 @@
+<style>
+    :root {
+        --color-primary: #269fe6;
+        --color-primary-hover: #2086c2;
+        --color-primary-dark: #13141f;
+        --color-primary-dark-hover: #212336;
+        --color-primary-light: #d4ecfa;
+        --color-primary-light-hover: #bdd8e7;
+    
+        --color-white: #fff;
+        --color-black: #000;
+    
+        --color-dark-text: #444;
+        --color-info-light: #cce5ff;
+        --color-debug-light: #cce5ff;
+        --color-success-light: #d4edda;
+        --color-alert-light: #fff3cd;
+        --color-warning-light: #fff3cd;
+        --color-error-light: #f8d7da;
+    
+        --color-info-dark: #4d86c4;
+        --color-debug-dark: #4d86c4;
+        --color-success-dark: #4a9c5d;
+        --color-alert-dark: #927f40;
+        --color-warning-dark: #927f40;
+        --color-error-dark: #da525d;
+    
+        --color-gray-0: #f9f9f9;
+        --color-gray-1: #e0e0e0;
+        --color-gray-2: #c7c7c7;
+        --color-gray-3: #aeaeae;
+        --color-gray-4: #959595;
+        --color-gray-5: #7d7d7d;
+        --color-gray-6: #646464;
+        --color-gray-7: #4b4b4b;
+        --color-gray-8: #323232;
+        --color-gray-9: #191919;
+    
+        --font-primary: sans-serif;
+        --font-headings: 'Roboto Slab', serif;
+    
+        --spacing-gutter-medium: 3rem;
+        --spacing-gutter-large: 4rem;
+    }
+
+.authors-dashboard-container {
+    max-width: 64rem;
+    text-align: left;
+    padding: var(--spacing-gutter-medium);
+    margin: 0 auto;
+}
+
+.authors-dashboard-container h3,
+.authors-dashboard-container p,
+.authors-dashboard-container ul {
+    list-style-type: none;
+    margin: 1rem 0;
+}
+
+.del1 {
+    padding: .7 .7rem;
+    margin: .1rem;
+    border-radius: 1rem;
+    color: red;
+    background-color: var(--color-gray-2);
+}
+.del{
+    display: inline;
+}
+
+</style>
+
+{% include 'receitas/partials/head.html' %}
+
+<body>
+    {%include 'receitas/partials/header.html'%}
+    {%include 'receitas/partials/search.html'%}
+    {%include 'receitas/partials/mensagem.html'%}
+    <div class="main-content center container">
+        <h2>Usuário ({{user}})</h2>
+        {% include "authors/partials/login_mensagem.html" %}
+
+        <div class="authors-dashboard-container">
+            <h3>Suas receitas não publicadas</h3>
+
+            <ul>
+                {% for receita in receitas  %}
+                <li>
+                    <a href="{% url "authors:dashboard_receita_edit" receita.id %}">{{receita.title}}</a> -
+                    <form class='del form-delete' action="{% url "authors:dashboard_receita_delete"%}" method='POST'>
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value='{{receita.id}}'>
+                        <button class='del1' type="submit">Delete</button>
+                    </form>
+                </li>
+                {%empty%}
+                    <li>
+                        <p>
+                            Você não tem nenhuma receita criada,
+                            <a href="{% url 'authors:criar_receita' %}">Criar receitas</a>.
+                        </p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {%include 'receitas/partials/footer.html'%}
+</body>
+<script>
+    function my_scope() {
+        const forms = document.querySelectorAll('.form-delete');
+         
+        for (const form of forms) {
+            form.addEventListener('submit', function (e) {
+            e.preventDefault();
+          
+            const confirmed = confirm('Tem certeza que deseja deletar?');
+          
+            if (confirmed) {
+                form.submit();
+            }
+            });
+        }
+        } 
+        my_scope();
+</script>
+

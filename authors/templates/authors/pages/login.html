@@ -43,64 +43,64 @@
         --spacing-gutter-large: 4rem;
     }
     
-    /* Forms */
-    .form-content {
-        max-width: 64rem;
-        margin: 0 auto;
-        margin-bottom: var(--spacing-gutter-medium);
-    }
+/* Forms */
+.form-content {
+    max-width: 64rem;
+    margin: 0 auto;
+    margin-bottom: var(--spacing-gutter-medium);
+}
     
-    .form-content label,
-    .form-content .help-text,
-    .errorlist {
-        display: block;
-        margin: 0.5rem 0;
-        font-size: 1.4rem;
-        list-style-type: none;
-    }
+.form-content label,
+.form-content .help-text,
+.errorlist {
+    display: block;
+    margin: 0.5rem 0;
+    font-size: 1.4rem;
+    list-style-type: none;
+}
     
-    .errorlist {
-        color: var(--color-error-dark);
-    }
+.errorlist {
+    color: var(--color-error-dark);
+}
     
-    .form-content input {
-        width: 100%;
-        padding: 1rem;
-        border-radius: 0.4rem;
-        border: 1px solid var(--color-primary-dark);
-    }
+.form-content input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--color-primary-dark);
+}
     
+.form-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+    gap: calc(var(--spacing-gutter-medium) / 2) var(--spacing-gutter-medium);
+}
+    
+.form-content button {
+    padding: 1rem 2rem;
+    border: none;
+    background: var(--color-primary-dark);
+    color: var(--color-white);
+}
+    
+@media (max-width: 600px) {
     .form-content-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-        gap: calc(var(--spacing-gutter-medium) / 2) var(--spacing-gutter-medium);
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
     }
+}
     
-    .form-content button {
-        padding: 1rem 2rem;
-        border: none;
-        background: var(--color-primary-dark);
-        color: var(--color-white);
+.inline-form {
+    display: inline;
     }
-    
-    @media (max-width: 600px) {
-        .form-content-grid {
-          grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
-        }
-    }
-    
-    .inline-form {
-        display: inline;
-      }
       
-      .plaintext-button {
-        display: inline;
-        border: none;
-        background: none;
-        cursor: pointer;
-        color: var(--color-primary);
-        font-size: 1.6rem;
-      }
+.plaintext-button {
+    display: inline;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--color-primary);
+    font-size: 1.6rem;
+}
 </style>
 
 {% include 'receitas/partials/head.html' %}
@@ -110,47 +110,36 @@
     {%include 'receitas/partials/search.html'%}
     {%include 'receitas/partials/mensagem.html'%}
     <div class="main-content center container">
-    <h2>Login</h2>
-    {% if request.user.is_authenticated %}
-      <div>
-        Your are logged in with 
-        {{ request.user.username }}. 
-        Please, 
-        <form class="inline-form" action="{% url 'authors:logout' %}" method='POST'>
-          {% csrf_token %}
-          <input type="hidden" name="username" value="{{ request.user.username }}">
-          <button class="plaintext-button" type="submit">click here</button>
-        </form> to logout.
-      </div>
-    {% endif %}
-  </div>
-
-    <div class='main-content container'>
-        <form action="{{ form_action }}" method="POST">
-                {% csrf_token %}
-
-            <div class='form-content form-content-grid'>
-                {% for field in form %}
-                <div class="form-group">
-                    <label for="{{field.id_for_label}}">{{field.label}}</label>
-                    {{field}}
-
-                    {% if field.help_text %}
-                    <p class='help-text'>{{field.help_text}}</p>
-                    {% endif %}
-
-                    {{field.errors}}
-                </div>
-                {% endfor %}
-            </div>
-
-            <div class='form-content form-content-grid'>
-                <div class="form-group">
-                    <button type="submit">Enviar</button>
-                </div>
-            </div>
-        </form>
+        <h2>Login</h2>
+        {% include "authors/partials/login_mensagem.html" %}
     </div>
+    {% if not user.is_authenticated %}
+        <div class='main-content container'>
+            <form action="{{ form_action }}" method="POST">
+                    {% csrf_token %}
 
+                <div class='form-content form-content-grid'>
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{field.id_for_label}}">{{field.label}}</label>
+                        {{field}}
+
+                        {% if field.help_text %}
+                        <p class='help-text'>{{field.help_text}}</p>
+                        {% endif %}
+
+                        {{field.errors}}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class='form-content form-content-grid'>
+                    <div class="form-group">
+                        <button type="submit">Enviar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
     {%include 'receitas/partials/footer.html'%}
 </body>

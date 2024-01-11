@@ -1,0 +1,154 @@
+<style>
+    :root {
+        --color-primary: #269fe6;
+        --color-primary-hover: #2086c2;
+        --color-primary-dark: #13141f;
+        --color-primary-dark-hover: #212336;
+        --color-primary-light: #d4ecfa;
+        --color-primary-light-hover: #bdd8e7;
+    
+        --color-white: #fff;
+        --color-black: #000;
+    
+        --color-dark-text: #444;
+        --color-info-light: #cce5ff;
+        --color-debug-light: #cce5ff;
+        --color-success-light: #d4edda;
+        --color-alert-light: #fff3cd;
+        --color-warning-light: #fff3cd;
+        --color-error-light: #f8d7da;
+    
+        --color-info-dark: #4d86c4;
+        --color-debug-dark: #4d86c4;
+        --color-success-dark: #4a9c5d;
+        --color-alert-dark: #927f40;
+        --color-warning-dark: #927f40;
+        --color-error-dark: #da525d;
+    
+        --color-gray-0: #f9f9f9;
+        --color-gray-1: #e0e0e0;
+        --color-gray-2: #c7c7c7;
+        --color-gray-3: #aeaeae;
+        --color-gray-4: #959595;
+        --color-gray-5: #7d7d7d;
+        --color-gray-6: #646464;
+        --color-gray-7: #4b4b4b;
+        --color-gray-8: #323232;
+        --color-gray-9: #191919;
+    
+        --font-primary: sans-serif;
+        --font-headings: 'Roboto Slab', serif;
+    
+        --spacing-gutter-medium: 3rem;
+        --spacing-gutter-large: 4rem;
+    }
+    
+    /* Forms */
+    .form-content {
+        max-width: 64rem;
+        margin: 0 auto;
+        margin-bottom: var(--spacing-gutter-medium);
+    }
+    
+    .form-content label,
+    .form-content .help-text,
+    .errorlist {
+        display: block;
+        margin: 0.5rem 0;
+        font-size: 1.4rem;
+        list-style-type: none;
+    }
+    
+    .errorlist {
+        color: var(--color-error-dark);
+    }
+    
+  .form-content input,
+  .form-content textarea,
+  .form-content select {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--color-primary-dark);
+  }
+    
+    .form-content-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+        gap: calc(var(--spacing-gutter-medium) / 2) var(--spacing-gutter-medium);
+    }
+    
+    .form-content button {
+        padding: 1rem 2rem;
+        border: none;
+        background: var(--color-primary-dark);
+        color: var(--color-white);
+    }
+    
+    @media (max-width: 600px) {
+        .form-content-grid {
+          grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+        }
+    }
+    
+    .inline-form {
+        display: inline;
+      }
+    .span-2 {
+        grid-column: span 2;
+      }
+    .span-2 img {
+      max-width: 100%;
+    }
+
+      .plaintext-button {
+        display: inline;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--color-primary);
+        font-size: 1.6rem;
+      }
+</style>
+<div class="main-content container">
+    <form class="main-form" action="{{ form_action }}" method="POST" enctype='multipart/form-data'>
+      {% csrf_token %}
+  
+      <div class="form-content form-content-grid">
+        {% for field in form %}
+          <div class="form-group {{field.field.widget.attrs.class}}">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{field}}
+  
+            {% if field.help_text %}
+              <p class="help-text">{{ field.help_text }}</p>
+            {% endif %}
+  
+            {{ field.errors }}
+          </div>
+
+          {% if field.name == 'cover' and field.value.url %}
+            <div class="span-2">
+              <img src="{{field.value.url}}" alt="Capa para{{receita.title}}">
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+  
+      {% if form.errors %}
+      <div class="form-content form-content-grid">
+        <div class="form-group">
+          <div class="message message-error">
+            Há erros no formulário, corrija-os e envie novamente.
+          </div>
+        </div>
+      </div>
+      {% endif %}
+  
+      <div class="form-content form-content-grid">
+        <div class="form-group">
+          <button type="submit">Enviar</button>
+        </div>
+      </div>
+    </form>
+  </div>
