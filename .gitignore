@@ -1,4 +1,5 @@
 venv
+anotaçao.txt
 # Django #
 *.log
 *.pot
