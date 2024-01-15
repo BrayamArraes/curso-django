@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
+from django.forms import ValidationError
+from django.utils.text import slugify
+from collections import defaultdict
 
 
 class Category(models.Model):
@@ -31,3 +35,31 @@ class receita(models.Model):
 # esta funçao é para mostrar o nome da categoria ou receita que colocar
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('receitas:receita', args=(self.id,))
+
+    # esta função faz com que toda slug fique unica
+    def save(self, *args, **kwargs):
+        if not self.slug:
+          slug = f'{slugify(self.title)}'
+          self.slug = slug
+
+        return super().save(*args, **kwargs)
+
+    # esta funçao de validação serve para que o usuario nao cria um receita com mesmo nome
+    def clean(self, *args, **kwargs):
+        error_messages = defaultdict(list)
+
+        receita_from_db = receita.objects.filter(
+            title__iexact=self.title
+        ).first()
+
+        if receita_from_db:
+            if receita_from_db.pk != self.pk:
+                error_messages['title'].append(
+                    'Já existe receita com este titulo'
+                )
+
+        if error_messages:
+            raise ValidationError(error_messages)

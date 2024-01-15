@@ -126,19 +126,18 @@ def dashboard_receita_edit(request, id):
         receitas.save()
 
         messages.success(request, 'Sua receita foi salva com sucesso!')
-        return redirect(reverse('authors:dashboard_receita_edit', args=(id,)))
-
+        return redirect(reverse('authors:dashboard_receita_edit',))
 
     return render(request, 'authors/pages/dashboard_receita.html', {
-        'form': form,
-})
+        'form': form
+    })
 
 
 # NOVA RECEITA
 @login_required(login_url='authors:login', redirect_field_name='next')
 def criar_receita(request):
     form = AuthorsReceitaForm(
-        data=request.POST or None,
+        request.POST or None,
         files=request.FILES or None,
     )
 
@@ -153,7 +152,7 @@ def criar_receita(request):
 
         messages.success(request, 'Salvo com sucesso!')
         return redirect(
-            reverse('authors:dashboard_receita_edit', args=(receita.id,))
+            reverse('authors:dashboard')
         )
 
     return render(
@@ -166,6 +165,7 @@ def criar_receita(request):
     )
 
 
+# Delete de receitas
 @login_required(login_url='authors:login', redirect_field_name='next')
 def dashboard_receita_delete(request):
     if not request.POST:

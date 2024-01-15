@@ -51,30 +51,6 @@ class AuthorsReceitaForm(forms.ModelForm):
         }
 
 #  Tipo de validação
-    def clean(self, *args, **kwargs):
-        super_clean = super().clean(*args, **kwargs)
-        cd = self.cleaned_data
-
-        title = cd.get('title')
-        description = cd.get('description')
-
-        if title == description:
-            self._my_errors['title'].append('Não pode ser igual a descrição.')
-            self._my_errors['description'].append('Não pode ser igual ao título.')
-
-        if self._my_errors:
-            raise ValidationError(self._my_errors)
-
-        return super_clean
-
-    def clean_title(self):
-        title = self.cleaned_data.get('title')
-
-        if len(title) < 5:
-            self._my_errors['title'].append('Deve conter pelo menos 5 caracteres.')
-
-        return title
-
     def clean_preparation_time(self):
         field_name = 'preparation_time'
         field_value = self.cleaned_data.get(field_name)
