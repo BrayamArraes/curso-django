@@ -143,3 +143,12 @@ class RegistroForm(forms.ModelForm):
                     password_confirmation_error,
                 ],
             })
+
+
+
+para traduzir a template para a linguagem em que o navegador se encontra você,
+ira precisar alterar a linguagem do html nas templates para 
+<html lang="{{ html_language }}">, nas views vc tem que importar o translation
+from django.utils import translation e no context das urls vocÊ tem que colocar
+html_language = translation.get_language(). Feito isso seu template daquela view ira
+ficar com a linguagem do navegador em que o cliente se encontra.

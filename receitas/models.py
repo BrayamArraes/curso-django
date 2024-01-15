@@ -4,6 +4,9 @@ from django.urls import reverse
 from django.forms import ValidationError
 from django.utils.text import slugify
 from collections import defaultdict
+import os
+from django.conf import settings
+from PIL import Image
 
 
 class Category(models.Model):
@@ -14,7 +17,7 @@ class Category(models.Model):
 
 
 class receita(models.Model):
-    title = models.CharField(max_length=65)
+    title = models.CharField(max_length=65, verbose_name='Titulo')  # verbose_name é a msm coisa que o label # noqa
     description = models.CharField(max_length=165)
     slug = models.SlugField()
     preparation_time = models.IntegerField()
@@ -39,13 +42,41 @@ class receita(models.Model):
     def get_absolute_url(self):
         return reverse('receitas:receita', args=(self.id,))
 
+    # deixando a image de um tamanho padrao
+    @staticmethod
+    def redimensionar_img(image, new_width=800):
+        image_full_path = os.path.join(settings.MEDIA_ROOT, image.name)
+        image_pillow = Image.open(image_full_path)
+        original_width, original_height = image_pillow.size
+
+        if original_width < new_width:
+            image_pillow.close()
+            return
+
+        new_height = round((new_width * original_height) / original_width)
+        new_image = image_pillow.resize((new_width, new_height), Image.LANCZOS)
+
+        new_image.save(
+            image_full_path,
+            optimize=True,
+            quality=50,
+        )
+
     # esta função faz com que toda slug fique unica
     def save(self, *args, **kwargs):
         if not self.slug:
-          slug = f'{slugify(self.title)}'
-          self.slug = slug
+          slug = f'{slugify(self.title)}' # noqa
+          self.slug = slug  # noqa
+        saved = super().save(*args, **kwargs)
 
-        return super().save(*args, **kwargs)
+        # esse if é referente a rediresionamento de imagem
+        if self.cover:
+            try:
+                self.resize_image(self.cover, 840)
+            except FileNotFoundError:
+                ...
+
+        return saved
 
     # esta funçao de validação serve para que o usuario nao cria um receita com mesmo nome
     def clean(self, *args, **kwargs):
